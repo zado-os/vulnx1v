@@ -1,3 +1,8 @@
+#### v3.0-nexploit-only (Nexploit — drop vulnx)
+- Removed `vulnx.py` — single entry: `nexploit.py` + `./nexploit`
+- Install/update/Docker/CLI rebranded to Nexploit only
+- Repo: https://github.com/zado-os/nexploit
+
 #### v2.3-nexploit (Nexploit — ZADO-OS Roger OS)
 - Rebrand: **Nexploit** (CLI `nexploit`) — repo [zado-os/nexploit](https://github.com/zado-os/nexploit)
 - Launcher: `nexploit.py` · install path `/usr/share/nexploit`

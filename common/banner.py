@@ -29,6 +29,6 @@ def banner():
     print(W + "  Repo    : " + G + REPO_URL + end)
     print(
         W + "  Credits : " + G + MAINTAINER + W + " (" + MAINTAINER_ALIAS + ")"
-        + W + " | fork: Anouar Ben Saad / VulnX" + end
+        + W + " | ZADO-OS Roger OS" + end
     )
     print("")

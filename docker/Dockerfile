@@ -1,54 +1,24 @@
 FROM python:3-alpine
-MAINTAINER ZADO-OS Roger OS (based on Anouar Ben Saad VulnX)
+MAINTAINER ZADO-OS Roger OS
 
-# Project Informations.
-LABEL name vulnx
+LABEL name nexploit
 LABEL src "https://github.com/zado-os/nexploit"
-LABEL creator anouarbensaad
-LABEL desc "Vulnx is a cms and vulnerabilites detection, an intelligent auto shell injector,\
-            fast cms detection of target and fast scanner and informations gathering like\
-	    subdomains, \
-	    ipaddresses,\
-	    country,    \
-	    org,        \
-	    timezone,   \
-	    region,     \
-	    ans         \
-	    and more ...\
-            Instead of injecting shell and checking it works like all the other tools do,\
-            vulnx analyses the response with and recieve if shell success uploaded or no.\
-	    vulnx is searching for urls with dorks."
-	    
-# Clonning Vulnx From Github
+LABEL creator zado-os
+LABEL desc "Nexploit — CMS detection, Exploits Scan, dorks, DNS, auto shell injector"
+
 RUN apk add --no-cache git && \
-    git clone https://github.com/zado-os/nexploit.git
+    git clone https://github.com/zado-os/nexploit.git /opt/nexploit
 
-# Make vulnx group
-RUN addgroup vulnx
+RUN addgroup -S nexploit && adduser -S -G nexploit nexploit
+RUN chown -R nexploit:nexploit /opt/nexploit
 
-# added \\vulnx [group] secondary group to vulnx.
-RUN adduser -G vulnx -g "vulnx user" -s /bin/sh -D vulnx
+USER nexploit
+WORKDIR /opt/nexploit
 
-# change vulnx owner of directory of project.
-RUN chown -R vulnx vulnx
-
-# Switch user.
-USER vulnx
-
-ENV APP_HOME=vulnx
-
-# Working−Directory
-WORKDIR $APP_HOME
-
-# Install Pip Packages.
 RUN pip install --user --upgrade pip && \
     pip install --user -r ./requirements.txt
 
-# Add Mount Volume Docker To Save All changes. 
-VOLUME [ "/vulnx" ]
+VOLUME [ "/nexploit" ]
 
-# Entrypoint -> Command : While Creating Container.
-ENTRYPOINT [ "python", "vulnx.py" ]
-
-# Default Command When Starting The Container.
-CMD ["--help"]
+ENTRYPOINT [ "python3", "nexploit.py" ]
+CMD [ "--help" ]

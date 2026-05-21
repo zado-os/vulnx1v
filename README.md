@@ -40,7 +40,7 @@
 
 Maintained by **ZADO-OS (Roger OS)**. Based on [anouarbensaad/vulnx](https://github.com/anouarbensaad/vulnx) — same spirit, new name, sharper chains.
 
-**Repository:** [github.com/zado-os/nexploit](https://github.com/zado-os/nexploit) (rename from `vulnx1v` in GitHub Settings → General → Repository name).
+**Repository:** [github.com/zado-os/nexploit](https://github.com/zado-os/nexploit)
 
 ```bash
 git clone https://github.com/zado-os/nexploit.git
@@ -77,7 +77,7 @@ chmod +x nexploit
 | Magento | 5 | `nexploit -u URL --exploit-cms magento` |
 | **All packs** | 95 | `nexploit -u URL --exploit-cms all` |
 
-- CLI: `nexploit` or `python nexploit.py` (alias: `python vulnx.py`)
+- CLI: `nexploit` أو `python3 nexploit.py` فقط (لا يوجد `vulnx`)
 - Progress: `[7/23] WP File Manager VULN https://target/.../VulnX.php`
 - Logs: `-o ./logs` → `exploits_wordpress.log`, etc.
 - Catalog: `nexploit --list-exploits all`
@@ -192,7 +192,7 @@ Nexploit interactive mode (`nexploit --it`).
 
 Run `python nexploit.py -h` or `nexploit -h` after install.
 
-    usage: vulnx.py [options]
+    usage: nexploit [options]
 
       -u, --url             URL target to scan
       -D, --dorks           Search websites with dorks (exploit name)
@@ -206,7 +206,7 @@ Run `python nexploit.py -h` or `nexploit -h` after install.
       -x, --exploit-scan    Run Exploits Scan (per detected CMS)
       --exploit-cms         Force scan: wordpress, joomla, prestashop, drupal, lokomedia, opencart, all
       --list-exploits       List modules: wordpress, joomla, prestashop, drupal, lokomedia, opencart, all
-      --it                  Interactive VulnX mode (URLSET / DORKSET)
+      --it                  Interactive Nexploit mode (URLSET / DORKSET)
       --cms                 CMS info (themes, plugins, users, version, …)
       -w, --web-info        Web / host information gathering
       -d, --domain-info     Subdomain information gathering
@@ -227,7 +227,7 @@ pip3 install -r requirements.txt
 
 ### _🕷️ Project layout_
 
-    vulnx.py              Main entry point
+    nexploit.py           Main entry point (only)
     install.sh            Install on Linux (root) / Termux
     update.sh             Update installed copy
     requirements.txt      Python dependencies
@@ -240,14 +240,14 @@ pip3 install -r requirements.txt
       exploits/           Exploit payloads
       gathering/          CMS / host intelligence
     shell/                Shell payloads (VulnX.php, VulnX.html, …)
-    bin/                  Desktop launcher (vulnx.desktop)
+    bin/                  Desktop launcher (nexploit.desktop)
     docker/               Dockerfile and Docker notes
 
 -------------------------------------
 
 ### _🕷️ Docker_
 
-VulnX in DOCKER !!.
+Nexploit in Docker
 
 ```bash
 $ git clone https://github.com/zado-os/nexploit.git
@@ -256,7 +256,7 @@ $ docker build -t nexploit ./docker/
 $ docker run -it --name nexploit nexploit:latest -u http://example.com
 ```
 
-run vulnx container in interactive mode
+run Nexploit container in interactive mode
 
 
 ![vokoscreen-2019-06-23_11-53-20](https://user-images.githubusercontent.com/23563528/59975226-a31d5480-95ad-11e9-8252-ddd8291cbee4.gif)
@@ -265,10 +265,10 @@ run vulnx container in interactive mode
 to view logfiles mount it in a volume like so:
 
 ```bash
-$ docker run -it --name nexploit -v "$PWD:/vulnx" nexploit:latest -u http://example.com
+$ docker run -it --name nexploit -v "$PWD:/nexploit" nexploit:latest -u http://example.com
 ```
 
-The image defines a mount point at `/vulnx` (see `docker/Dockerfile`). Map a host folder there to persist logs and output on the host.
+Volume mount: `/nexploit` (see `docker/Dockerfile`).
 
 -------------------------------------
 
@@ -314,7 +314,7 @@ chmod +x nexploit && ./nexploit -u http://example.com -x
 ![vokoscreen-2019-07-05_03-59-48](https://user-images.githubusercontent.com/23563528/60695392-7a645b80-9ed9-11e9-94fb-f6025594a9e3.gif)
 
 
-### _🕷️ Install vulnx on Termux_
+### _🕷️ Install Nexploit on Termux_
 
 ```bash
 $ pkg update
@@ -329,7 +329,7 @@ Run as root in Termux when prompted by the installer.
 [**CLICK HERE TO SHOW THE RESULT**](https://user-images.githubusercontent.com/23563528/58364091-98847800-7ea6-11e9-9a9a-c27717e4dda1.png)
 
 
-### _🕷️ Install vulnx in Windows_
+### _🕷️ Install Nexploit on Windows_
 
 - [Download ZIP](https://github.com/zado-os/nexploit/archive/refs/heads/main.zip)
 - Install [Python 3](https://www.python.org/downloads/)
@@ -445,6 +445,6 @@ Contributions welcome:
 - Add exploit modules to `modules/exploits/exploit_scanner.py` chains
 - Improve CMS fingerprints & accuracy
 
-***VulnX (ZADO-OS Roger OS Edition)*** is licensed under [GPL-3.0 License](LICENSE)
+***Nexploit (ZADO-OS Roger OS Edition)*** is licensed under [GPL-3.0 License](LICENSE)
 
 Original project: [anouarbensaad/vulnx](https://github.com/anouarbensaad/vulnx)

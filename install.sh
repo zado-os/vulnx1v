@@ -1,137 +1,98 @@
 #!/bin/bash
+# Nexploit installer — ZADO-OS Roger OS (Python 3 only)
 
 red="\e[0;31m"
 blue="\e[0;94m"
 green="\e[0;32m"
 off="\e[0m"
 
-#vulnx install function for Android. termux
-function banner(){
-    echo -e "===== Nexploit INSTALL — ZADO-OS Roger OS Edition ====="
+REPO="https://github.com/zado-os/nexploit.git"
+INSTALL_DIR="/usr/share/nexploit"
+TERMUX_DIR="/data/data/com.termux/files/usr/share/nexploit"
+
+banner() {
+    echo -e "===== Nexploit INSTALL — ZADO-OS Roger OS ====="
 }
 
-function termuxOS() {
-    echo -e "$red [$green+$red]$off Installing Python ...";
-    pkg install python
-    echo -e "$red [$green+$red]$off Installing Packages ...";
-    pip3 install -r ./requirements.txt 2>/dev/null || python3 -m pip install -r ./requirements.txt
-    echo -e "$red [$green+$red]$off Checking directories ..."
-    if [ -e "/data/data/com.termux/files/usr/share/vulnx" ]; then
-        echo -e "$red [$green+$red]$off A previous installation was found Do you want to replace it? [Y/n]: "
-        read replace
-        if [ "$replace" == "y" ] || [ "$replace" == "Y" ] || [ -z "$replace" ]; then
-            rm -r "/data/data/com.termux/files/usr/share/vulnx"
-            rm "/data/data/com.termux/files/usr/bin/vulnx"
-        else
-            echo -e "$red [$green✘$red]$off If You Want To Install You Must Remove Previous Installations";
-            echo -e "$red [$green✘$red]$off Installation Failed";
-            exit
-        fi
-    fi
-    echo -e "$red [$green+$red]$off Installing ...";
-    mkdir "/data/data/com.termux/files/usr/share/vulnx" 
-    cp "vulnx.py" "/data/data/com.termux/files/usr/share/vulnx"
-    cp "install.sh" "/data/data/com.termux/files/usr/share/vulnx"
-    cp "update.sh" "/data/data/com.termux/files/usr/share/vulnx"
-    cp -r "./common" "/data/data/com.termux/files/usr/share/vulnx"
-    cp -r "./modules" "/data/data/com.termux/files/usr/share/vulnx"
-    cp -r "./shell" "/data/data/com.termux/files/usr/share/vulnx"
-    chmod +x /data/data/com.termux/files/usr/share/vulnx/update.sh
-    echo -e "$red [$green+$red]$off Creating Symbolic Link ...";
-    echo "#!/data/data/com.termux/files/usr/bin/bash 
-    python /data/data/com.termux/files/usr/share/vulnx/vulnx.py" '${1+"$@"}' > "vulnx";
-    cp "vulnx" "/data/data/com.termux/files/usr/bin"
-    chmod +x "/data/data/com.termux/files/usr/bin/vulnx"
-    rm "vulnx";
-    if [ -d "/data/data/com.termux/files/usr/share/vulnx" ] ;
-    then
-        echo -e "$red [$green+$red]$off Tool successfully installed and will start in 5s!";
-        echo -e "$red [$green+$red]$off Run: nexploit  (alias: vulnx)"
-        sleep 5;
-        nexploit 2>/dev/null || vulnx 2>/dev/null || python3 nexploit.py
-    else
-        echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System! Use It As Portable !";
-        exit
-    fi
+install_portable() {
+    echo -e "$red [$green+$red]$off Use: chmod +x nexploit && ./nexploit -u URL -x"
+    echo -e "$red [$green+$red]$off Or: python3 nexploit.py -u URL -x"
 }
 
-#vulnx install function for debian operating system. linux.
-function debianOS(){
-    echo -e "$red [$green+$red]$off Installing python3 and pip... ";
-    sudo apt-get install -y python3 python3-pip whois
-    if python3 -m pip install -r ./requirements.txt --break-system-packages 2>/dev/null; then
-        :
-    elif python3 -m pip install -r ./requirements.txt --user 2>/dev/null; then
-        :
-    else
-        python3 -m pip install -r ./requirements.txt
-    fi
-    echo -e "$red [$green+$red]$off Checking directories... "
-    if [ -d "/usr/share/VulnX" ]; then
-        echo -e "$red [$green+$red]$off A Directory VulnX Was Found! Do You Want To Replace It? [Y/n]:" ;
+termuxOS() {
+    echo -e "$red [$green+$red]$off Installing Python3 ..."
+    pkg install -y python git
+    python3 -m pip install -r ./requirements.txt 2>/dev/null || pip3 install -r ./requirements.txt
+    if [ -d "$TERMUX_DIR" ]; then
+        echo -e "$red [$green+$red]$off Replace old install? [Y/n]:"
         read replace
-        if [ "$replace" == "y" ] || [ "$replace" == "Y" ] || [ -z "$replace" ]; then
-            sudo rm -r "/usr/share/vulnx"
-            sudo rm "/usr/share/icons/vulnxicon.png"
-            sudo rm "/usr/share/applications/vulnx.desktop"
-            sudo rm "/usr/local/bin/vulnx"
+        if [ "$replace" = "y" ] || [ "$replace" = "Y" ] || [ -z "$replace" ]; then
+            rm -rf "$TERMUX_DIR"
+            rm -f "/data/data/com.termux/files/usr/bin/nexploit"
         else
-            echo -e "$red [$green✘$red]$off If You Want To Install You Must Remove Previous Installations";
-            echo -e "$red [$green✘$red]$off Installation Failed";
-            exit
+            exit 1
         fi
-    fi 
-    echo -e "$red [$green+$red]$off Installing ...";
-    echo -e "$red [$green+$red]$off Creating Symbolic Link ...";
-    cat > nexploit-bin << 'NEXE'
+    fi
+    mkdir -p "$TERMUX_DIR"
+    cp -r common modules shell nexploit.py install.sh update.sh nexploit requirements.txt "$TERMUX_DIR/"
+    chmod +x "$TERMUX_DIR/nexploit" 2>/dev/null || true
+    cat > /data/data/com.termux/files/usr/bin/nexploit << 'EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+exec python3 /data/data/com.termux/files/usr/share/nexploit/nexploit.py "$@"
+EOF
+    chmod +x /data/data/com.termux/files/usr/bin/nexploit
+    echo -e "$green[+]$off Run: nexploit"
+    nexploit --help 2>/dev/null || python3 nexploit.py --help
+}
+
+debianOS() {
+    echo -e "$red [$green+$red]$off Installing python3 ..."
+    apt-get install -y python3 python3-pip git whois
+    python3 -m pip install -r ./requirements.txt --break-system-packages 2>/dev/null \
+        || python3 -m pip install -r ./requirements.txt --user 2>/dev/null \
+        || python3 -m pip install -r ./requirements.txt
+    if [ -d "$INSTALL_DIR" ]; then
+        echo -e "$red [$green+$red]$off Replace $INSTALL_DIR? [Y/n]:"
+        read replace
+        if [ "$replace" = "y" ] || [ "$replace" = "Y" ] || [ -z "$replace" ]; then
+            rm -rf "$INSTALL_DIR"
+            rm -f /usr/local/bin/nexploit
+        else
+            exit 1
+        fi
+    fi
+    mkdir -p "$INSTALL_DIR"
+    cp -r common modules shell nexploit.py install.sh update.sh nexploit requirements.txt "$INSTALL_DIR/"
+    chmod +x "$INSTALL_DIR/nexploit" "$INSTALL_DIR/update.sh" 2>/dev/null || true
+    cat > /usr/local/bin/nexploit << EOF
 #!/bin/bash
-exec python3 /usr/share/nexploit/nexploit.py "$@"
-NEXE
-    chmod +x nexploit-bin
-    echo -e "#!/bin/bash
-    python3 /usr/share/nexploit/vulnx.py" '${1+"$@"}' > "vulnx";
-    chmod +x "vulnx";
-    if [[ ! -d "/usr/share/nexploit" ]];then
-    sudo mkdir "/usr/share/nexploit"
+exec python3 ${INSTALL_DIR}/nexploit.py "\$@"
+EOF
+    chmod +x /usr/local/bin/nexploit
+    if [ -f bin/nexploit.desktop ]; then
+        cp bin/nexploit.desktop /usr/share/applications/ 2>/dev/null || true
     fi
-    sudo cp "install.sh" "/usr/share/nexploit"
-    sudo cp "update.sh" "/usr/share/nexploit"
-    sudo cp "nexploit.py" "/usr/share/nexploit"
-    sudo cp -r "./common" "/usr/share/nexploit/"
-    sudo cp -r "./modules" "/usr/share/nexploit/"
-    sudo cp -r "./shell" "/usr/share/nexploit/"
-    sudo chmod +x /usr/share/nexploit/update.sh
-    sudo cp "vulnx.py" "/usr/share/nexploit"
-    sudo cp "bin/vulnxicon.png" "/usr/share/icons"
-    sudo cp "bin/vulnx.desktop" "/usr/share/applications"
-    sudo cp "nexploit-bin" "/usr/local/bin/nexploit"
-    sudo cp "vulnx" "/usr/local/bin/"
-    rm -f "nexploit-bin" "vulnx"
-    if [ -d "/usr/share/nexploit" ] ;
-    then
-        echo -e "$red [$green+$red]$off Tool Successfully Installed And Will Start In 5s!";
-        echo -e "$red [$green+$red]$off Run: nexploit  (alias: vulnx)"
-        sleep 5;
-        nexploit 2>/dev/null || vulnx 2>/dev/null || python3 nexploit.py
-    else
-        echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System! Use It As Portable !";
-        exit
-    fi 
+    if [ -f bin/nexploiticon.png ]; then
+        cp bin/nexploiticon.png /usr/share/icons/ 2>/dev/null || true
+    elif [ -f bin/vulnxicon.png ]; then
+        cp bin/vulnxicon.png /usr/share/icons/nexploiticon.png 2>/dev/null || true
+    fi
+    echo -e "$green[+]$off Installed. Run: nexploit -u https://target.com -x"
+    nexploit --help 2>/dev/null || python3 nexploit.py --help
 }
-#main
-if [[ $UID -eq 0 ]]; then
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Run as root: sudo ./install.sh"
+    install_portable
+    exit 1
+fi
+
+banner
 if [ -d "/data/data/com.termux/files/usr/" ]; then
-    banner
-    echo -e "$red [$green+$red]$off Vulnx Will Be Installed In Your System";
     termuxOS
-elif [ -d "/usr/bin/" ];then
-    banner
-    echo -e "$red [$green+$red]$off Vulnx Will Be Installed In Your System";
+elif [ -d "/usr/bin/" ]; then
     debianOS
 else
-    echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System! Use It As Portable !";
-    exit
-fi
-else
-    echo "You must run as root..."
+    install_portable
+    exit 1
 fi

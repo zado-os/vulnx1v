@@ -1,48 +1,32 @@
-red   = "\e[0;31m"
-green = "\e[0;32m"
-off   = "\e[0m"
-function banner(){
-    echo -e "===== VULNX INSTALL ====="
-}
-function termuxOS() {
-  echo -e "$red [$green+$red]$Cleaning Up Old Directories ...";
-  rm -r "/data/data/com.termux/files/usr/share/vulnx"
-  echo -e "$red [$green+$red]$off Installing ...";
-  git clone https://github.com/anouarbensaad/vulnx "/data/data/com.termux/files/usr/share/vulnx";
-  rm -r "/data/data/com.termux/files/usr/share/vulnx/config"
-  if [[ -d "/data/data/com.termux/files/usr/share/vulnx" ]]; then
-    echo -e "$red [$green+$red]$off Tool Successfully Updated And Will Start In 5s!";
-    echo -e "$red [$green+$red]$off You can execute tool by typing vulnx"
-    sleep 5;
-    vulnx
-  else
-    echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System! Use It As Portable !";
-    exit
-  fi 
+#!/bin/bash
+red="\e[0;31m"
+green="\e[0;32m"
+off="\e[0m"
+REPO="https://github.com/zado-os/nexploit.git"
+INSTALL_DIR="/usr/share/nexploit"
+TERMUX_DIR="/data/data/com.termux/files/usr/share/nexploit"
+
+banner() { echo -e "===== Nexploit UPDATE — ZADO-OS ====="; }
+
+termuxOS() {
+  rm -rf "$TERMUX_DIR"
+  git clone "$REPO" "$TERMUX_DIR"
+  echo -e "$green[+]$off Updated. Run: nexploit"
 }
 
-function debianOS() {
-  echo -e "$red [$green+$red]$off Cleaning Up Old Directories ...";
-  sudo rm -r "/usr/share/vulnx"
-  echo -e "$red [$green+$red]$off Installing ...";
-  sudo git clone https://github.com/anouarbensaad/vulnx "/usr/share/vulnx";
-  sudo rm -r "/usr/share/vulnx/config"
-  if [[ -d "/usr/share/vulnx" ]]; then
-    echo -e "$red [$green+$red]$off Tool Successfully Updated And Will Start In 5s!";
-    echo -e "$red [$green+$red]$off You can execute tool by typing vulnx";
-    sleep 5;
-    vulnx
-  else
-    echo -e "$red [$green✘$red]$off Tool Cannot Be Installed On Your System! Use It As Portable !";
-    exit
-  fi 
+debianOS() {
+  rm -rf "$INSTALL_DIR"
+  git clone "$REPO" "$INSTALL_DIR"
+  chmod +x "$INSTALL_DIR/nexploit" "$INSTALL_DIR/update.sh" 2>/dev/null || true
+  echo -e "$green[+]$off Updated. Run: nexploit"
 }
-if [[ -d "/data/data/com.termux/files/usr/" ]]; then
+
 banner
-echo -e "$red [$green+$red]$off vulnx Will Be Installed In Your System";
-termuxOS
-elif [ -d "/usr/bin/" ];then
-banner
-echo -e "$red [$green+$red]$off vulnx Will Be Installed In Your System";
-debianOS
+if [ -d "/data/data/com.termux/files/usr/" ]; then
+  termuxOS
+elif [ -d "/usr/bin/" ]; then
+  debianOS
+else
+  echo "Unsupported system"
+  exit 1
 fi
