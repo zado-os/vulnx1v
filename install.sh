@@ -83,9 +83,11 @@ function debianOS(){
     fi 
     echo -e "$red [$green+$red]$off Installing ...";
     echo -e "$red [$green+$red]$off Creating Symbolic Link ...";
-    echo -e "#!/bin/bash
-    python3 /usr/share/nexploit/nexploit.py" '${1+"$@"}' > "nexploit";
-    chmod +x "nexploit";
+    cat > nexploit-bin << 'NEXE'
+#!/bin/bash
+exec python3 /usr/share/nexploit/nexploit.py "$@"
+NEXE
+    chmod +x nexploit-bin
     echo -e "#!/bin/bash
     python3 /usr/share/nexploit/vulnx.py" '${1+"$@"}' > "vulnx";
     chmod +x "vulnx";
@@ -102,9 +104,9 @@ function debianOS(){
     sudo cp "vulnx.py" "/usr/share/nexploit"
     sudo cp "bin/vulnxicon.png" "/usr/share/icons"
     sudo cp "bin/vulnx.desktop" "/usr/share/applications"
-    sudo cp "nexploit" "/usr/local/bin/"
+    sudo cp "nexploit-bin" "/usr/local/bin/nexploit"
     sudo cp "vulnx" "/usr/local/bin/"
-    rm "nexploit" "vulnx";
+    rm -f "nexploit-bin" "vulnx"
     if [ -d "/usr/share/nexploit" ] ;
     then
         echo -e "$red [$green+$red]$off Tool Successfully Installed And Will Start In 5s!";

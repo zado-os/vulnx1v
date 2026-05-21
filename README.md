@@ -43,9 +43,12 @@ Maintained by **ZADO-OS (Roger OS)**. Based on [anouarbensaad/vulnx](https://git
 ```bash
 git clone https://github.com/zado-os/vulnx1v.git
 cd vulnx1v
-pip install -r requirements.txt
-python nexploit.py -u https://target.com --exploit-scan -o ./logs
+python3 -m pip install -r requirements.txt --break-system-packages   # Kali/Debian
+chmod +x nexploit
+./nexploit -u https://example.com --exploit-scan -o ./logs
 ```
+
+> **Kali:** لا تستخدم `pip` أو `python` فقط — غالباً يشيران إلى **Python 2.7**. استخدم دائماً **`python3`** و **`pip3`** أو `./nexploit`.
 
 -------------------------------------
 
@@ -209,12 +212,16 @@ Run `python nexploit.py -h` or `nexploit -h` after install.
 
 ### _🕷️ Requirements_
 
-Python 3 with dependencies from `requirements.txt`:
+Python **3** only (`requirements.txt`):
 
     requests
-    bs4
+    beautifulsoup4
 
-Install: `pip install -r requirements.txt`
+```bash
+python3 -m pip install -r requirements.txt --break-system-packages   # Kali
+# أو
+pip3 install -r requirements.txt
+```
 
 ### _🕷️ Project layout_
 
@@ -263,27 +270,43 @@ The image defines a mount point at `/vulnx` (see `docker/Dockerfile`). Map a hos
 
 -------------------------------------
 
-### _🕷️ Install vulnx on Ubuntu_
-
+### _🕷️ Kali Linux (بدون install.sh)_
 
 ```bash
-$ git clone https://github.com/zado-os/vulnx1v.git
-$ cd vulnx1v
-$ sudo chmod +x install.sh
-$ sudo ./install.sh
+git clone https://github.com/zado-os/vulnx1v.git
+cd vulnx1v
+apt install -y python3 python3-pip
+python3 -m pip install -r requirements.txt --break-system-packages
+chmod +x nexploit
+./nexploit -u https://mobile.punjigyan.com -x -o ./logs
 ```
 
-Install copies to `/usr/share/nexploit` and adds `nexploit` (+ alias `vulnx`) in `/usr/local/bin`. Then:
+| المشكلة | الحل |
+|---------|------|
+| `nexploit: command not found` | `./nexploit` من مجلد المشروع أو `sudo ./install.sh` |
+| كتابة `nexploit.py` فقط | استخدم `python3 nexploit.py` أو `./nexploit` |
+| `pip` → Python 2.7 | استخدم `python3 -m pip` وليس `pip` |
+
+### _🕷️ Install Nexploit on Ubuntu / Kali (نظامي)_
 
 ```bash
-$ nexploit -u http://example.com --exploit-scan
+git clone https://github.com/zado-os/vulnx1v.git
+cd vulnx1v
+sudo chmod +x install.sh
+sudo ./install.sh
+```
+
+ثم:
+
+```bash
+nexploit -u http://example.com --exploit-scan
 ```
 
 Portable:
 
 ```bash
-$ pip install -r requirements.txt
-$ python3 nexploit.py -u http://example.com
+python3 -m pip install -r requirements.txt --break-system-packages
+chmod +x nexploit && ./nexploit -u http://example.com -x
 ```
 
 ![vokoscreen-2019-07-05_03-59-48](https://user-images.githubusercontent.com/23563528/60695392-7a645b80-9ed9-11e9-94fb-f6025594a9e3.gif)
