@@ -5,7 +5,7 @@ from __future__ import (absolute_import, division, print_function)
 
 APP_NAME = "DevXploit"
 APP_SLUG = "devxploit"
-APP_VERSION = "4.4.0"
+APP_VERSION = "4.4.1"
 MAINTAINER_FULL = "Hussain Al-zadjali"
 APP_TAGLINE = "CMS Exploit Framework · Intel · Shell Injection"
 EDITION = "ZADO-OS Roger OS Edition"

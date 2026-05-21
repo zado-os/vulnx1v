@@ -1,3 +1,7 @@
+#### v4.4.1 — No false HIT on readme.txt
+- readme.txt / plugin dirs = INFO only, never SHELL in summary
+- Elementor CVE-2024-8236: real ajax upload attempt, not readme detection
+
 #### v4.4.0 — Full real exploit + official icon
 - All CMS probes: CVE → legacy bridge → generic upload (WP/Joomla/PrestaShop)
 - Path/exposure probes attempt upload.php + real leaks in REAL mode
