@@ -1,5 +1,1 @@
-fix: strict shell verification — no false HIT on 404 pages
-
-- shell_probe requires HTTP 200 + php_uname/shell body; rejects FR/EN 404
-- WordPress cherry/dm/inboundio/revslider and others use _shell_ok()
-- Duplicator/OpenCart API labeled EXPOSE/INFO not shell HIT
+feat: add 2026 exploit pack — 50 probes per CMS (350 new, 468 total)

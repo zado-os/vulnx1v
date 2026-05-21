@@ -1,3 +1,8 @@
+#### v3.2.0 — 2026 exploit pack (50 per CMS)
+- **350 new probes** (50 × WordPress, Joomla, PrestaShop, Drupal, OpenCart, Lokomedia, Magento)
+- Engine: `modules/exploits/probes_2026/` (catalog + `probe_engine.py`)
+- Total modules: **468** (legacy + 2026)
+
 #### v3.1-devxploit (DevXploit — ZADO-OS Roger OS)
 - Rebrand: **DevXploit** (`devxploit` / `devxploit.py`) — MSF-inspired console, `HIT`/`MISS` markers
 - Shell payloads: `DevXploit.php` + `?DevXploit=1` (legacy `VulnX.*` mapped in `paths.py`)

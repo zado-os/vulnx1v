@@ -9,7 +9,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/App-DevXploit-9cf?style=flat-square" alt="DevXploit">
-  <img src="https://img.shields.io/badge/Modules-119+-red?style=flat-square" alt="modules">
+  <img src="https://img.shields.io/badge/Modules-468+-red?style=flat-square" alt="modules">
   <img src="https://img.shields.io/badge/License-GPL--3.0-green?style=flat-square" alt="license">
   <a href="https://github.com/zado-os/devxploit">
     <img src="https://img.shields.io/github/stars/zado-os/devxploit?style=flat-square" alt="stars">
@@ -141,7 +141,7 @@ sequenceDiagram
 | Area | Capability |
 |------|------------|
 | CMS detection | WordPress, Joomla, PrestaShop, Drupal, OpenCart, Lokomedia, Magento |
-| Exploits Scan | **119** modules across 8 packs (incl. intel + WP extras) |
+| Exploits Scan | **468** modules — legacy chains + **50×7 CMS 2026 pack** (CVE/advisory probes) |
 | Intel pack | `.git`, `.env`, phpinfo, wp-config backups, XML-RPC, Timthumb, PHPUnit, Adminer, phpMyAdmin, SQL dumps, Swagger, Spring Actuator, debug logs, WP REST users |
 | Shell payloads | `shell/DevXploit.php` (+ html/txt/gif) — query `?DevXploit=1` |
 | Output | `HIT` = verified shell body, `EXPOSE` = backup leak, `INFO` = panel/API, `MISS` = not vulnerable; `-o` logs |
@@ -150,17 +150,21 @@ sequenceDiagram
 
 ### Module counts by pack
 
-| Pack | Modules | Example command |
-|------|---------|-----------------|
-| Intel | 14 | Always runs first on unknown CMS; `devxploit --exploit-cms intel` |
-| WordPress | 33 | `devxploit -u URL --exploit-cms wordpress` |
-| Joomla | 19 | `devxploit -u URL --exploit-cms joomla` |
-| PrestaShop | 28 | `devxploit -u URL --exploit-cms prestashop` |
-| Drupal | 8 | `devxploit -u URL --exploit-cms drupal` |
-| OpenCart | 6 | `devxploit -u URL --exploit-cms opencart` |
-| Lokomedia | 6 | `devxploit -u URL --exploit-cms lokomedia` |
-| Magento | 5 | `devxploit -u URL --exploit-cms magento` |
-| **All** | **119** | `devxploit -u URL --exploit-cms all` |
+| Pack | Legacy | **2026** | **Total** | Example |
+|------|--------|----------|-----------|---------|
+| Intel | 14 | — | 14 | `devxploit --exploit-cms intel` |
+| WordPress | 32 | 50 | **82** | `devxploit -u URL --exploit-cms wordpress` |
+| Joomla | 19 | 50 | **69** | `--exploit-cms joomla` |
+| PrestaShop | 28 | 50 | **78** | `--exploit-cms prestashop` |
+| Drupal | 8 | 50 | **58** | `--exploit-cms drupal` |
+| OpenCart | 6 | 50 | **56** | `--exploit-cms opencart` |
+| Lokomedia | 6 | 50 | **56** | `--exploit-cms lokomedia` |
+| Magento | 5 | 50 | **55** | `--exploit-cms magento` |
+| **All packs** | 118 | 350 | **468** | `devxploit -u URL --exploit-cms all` |
+
+*(Banner may show 468 modules loaded — Intel 14 + CMS chains including 50×7 for 2026.)*
+
+2026 modules live under `modules/exploits/probes_2026/` (data-driven CVE/plugin/path probes). Most report **INFO** when a vulnerable component or path exists — not a confirmed shell unless `HIT` with `php_uname` in the response.
 
 List modules: `devxploit --list-exploits all`
 
