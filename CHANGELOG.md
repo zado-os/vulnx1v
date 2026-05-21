@@ -1,6 +1,9 @@
+#### v4.2.1 — Repo cleanup
+- Removed `CONTRIBUTORS.md`; maintainer credit only in README
+
 #### v4.2.0 — Advanced pipeline (all requested features)
 - `--full`: CVE match, SQLi/XSS, WPScan, Nuclei, searchsploit, PDF, rate-limit, double-verify
-- `data/cve_db.json` + CVSS in reports; `CONTRIBUTORS.md` (zado-os only, no Cursor co-author)
+- `data/cve_db.json` + CVSS in reports
 - TUI `--tui`, docker-compose, fpdf2 reports, modern maintainer docs
 
 #### v4.0.1 — Accuracy & banner

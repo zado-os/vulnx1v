@@ -1,5 +1,0 @@
-v4.2.0: all advanced features, README, contributors policy
-
-- CVE/SQLi-XSS/WPScan/Nuclei/MSF/PDF/TUI/--full pipeline
-- CONTRIBUTORS.md: zado-os only; disable Cursor co-author
-- Docker compose, data/cve_db.json, updated README
