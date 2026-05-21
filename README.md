@@ -32,16 +32,6 @@
 | **Project** | ZADO-OS Roger OS Edition |
 | **Upstream** | [anouarbensaad/vulnx](https://github.com/anouarbensaad/vulnx) |
 
-### If @cursoragent appears on GitHub
-
-Git history has **only** `zado-os` — not Cursor. If the site still shows 2 contributors:
-
-1. **Cursor** → Settings → Git → turn off **co-author / Include Cursor in commits**.
-2. **GitHub** → repo **Settings** → **Collaborators** → remove `cursoragent` if listed.
-3. Hard-refresh the repo page (Ctrl+F5). Official API lists only [@zado-os](https://github.com/zado-os).
-4. After `git pull`, enable hooks: `git config core.hooksPath .githooks` (strips Cursor co-author from new commits).
-
----
 
 ## Overview
 
