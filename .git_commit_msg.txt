@@ -1,6 +1,5 @@
-DevXploit v3.1: rebrand, 119 modules, MSF-style UI, Joomla fixes
+fix: strict shell verification — no false HIT on 404 pages
 
-- Rename CLI to devxploit; remove nexploit entry points
-- DevXploit shell payloads; Intel pack + WordPress extras
-- Fix Joomla shared Content-Type corruption; thumbnail path
-- English README with full mermaid architecture
+- shell_probe requires HTTP 200 + php_uname/shell body; rejects FR/EN 404
+- WordPress cherry/dm/inboundio/revslider and others use _shell_ok()
+- Duplicator/OpenCart API labeled EXPOSE/INFO not shell HIT
