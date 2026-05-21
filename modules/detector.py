@@ -131,7 +131,7 @@ class CMS(object):
             name = 'Lokomedia2'
             return name
         else:
-            name = 'Uknown'
+            name = 'Unknown'
             return name
 
     def serialize(self):

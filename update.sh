@@ -1,32 +1,16 @@
 #!/bin/bash
-red="\e[0;31m"
-green="\e[0;32m"
-off="\e[0m"
-REPO="https://github.com/zado-os/nexploit.git"
-INSTALL_DIR="/usr/share/nexploit"
-TERMUX_DIR="/data/data/com.termux/files/usr/share/nexploit"
+# DevXploit updater — ZADO-OS Roger OS
 
-banner() { echo -e "===== Nexploit UPDATE — ZADO-OS ====="; }
+INSTALL_DIR="/usr/share/devxploit"
+REPO="https://github.com/zado-os/devxploit.git"
 
-termuxOS() {
-  rm -rf "$TERMUX_DIR"
-  git clone "$REPO" "$TERMUX_DIR"
-  echo -e "$green[+]$off Updated. Run: nexploit"
-}
-
-debianOS() {
-  rm -rf "$INSTALL_DIR"
-  git clone "$REPO" "$INSTALL_DIR"
-  chmod +x "$INSTALL_DIR/nexploit" "$INSTALL_DIR/update.sh" 2>/dev/null || true
-  echo -e "$green[+]$off Updated. Run: nexploit"
-}
-
-banner
-if [ -d "/data/data/com.termux/files/usr/" ]; then
-  termuxOS
-elif [ -d "/usr/bin/" ]; then
-  debianOS
-else
-  echo "Unsupported system"
-  exit 1
+if [ ! -d "$INSTALL_DIR/.git" ]; then
+    echo "[-] DevXploit not installed in $INSTALL_DIR"
+    exit 1
 fi
+
+cd "$INSTALL_DIR" || exit 1
+git pull origin main
+python3 -m pip install -r requirements.txt --break-system-packages 2>/dev/null \
+    || python3 -m pip install -r requirements.txt --user
+echo "[+] DevXploit updated. Run: devxploit -u URL -x"

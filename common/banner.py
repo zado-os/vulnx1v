@@ -1,34 +1,35 @@
-from common.colors import bannerblue, bannerblue2, W, Y, G, end
-from common.branding import APP_NAME, EDITION, MAINTAINER, MAINTAINER_ALIAS, REPO_URL
+from common.colors import bannerblue, bannerblue2, W, Y, G, R, end, msf_red, msf_dim
+from common.branding import (
+    APP_NAME,
+    APP_VERSION,
+    EDITION,
+    MAINTAINER,
+    MAINTAINER_ALIAS,
+    REPO_URL,
+    APP_TAGLINE,
+)
+from modules.exploits.exploit_scanner import exploit_module_total
 
 
 def banner():
-    w = 58
-    print(bannerblue + "+" + "=" * w + "+" + end)
-    print(bannerblue + "|" + end + (G + ("  %s  " % APP_NAME).center(w)) + bannerblue + "|" + end)
-    print(bannerblue + "|" + end + (Y + ("  %s  " % EDITION).center(w)) + bannerblue + "|" + end)
-    print(bannerblue + "|" + end + W + "  CMS - Exploits Scan - Dorks - DNS - Ports  ".center(w) + bannerblue + "|" + end)
-    print(bannerblue + "+" + "=" * w + "+" + end)
-    print(bannerblue + "                    .:.        .:," + end)
-    print(bannerblue + "                   xM;           XK." + end)
-    print(bannerblue + "                  dx'            .lO." + end)
-    print(bannerblue + "                 do                ,0." + end)
-    print(bannerblue + "             .c.lN'      ,  '.     .k0.:'" + end)
-    print(bannerblue + "              xMMk;d;''cOM0kWXl,',locMMX." + end)
-    print(bannerblue + "               lMMO  lWMMMMMMMMMO. lMMO" + end)
-    print(bannerblue + "                cWMxxMMMMMMMMMMMMKlWMk" + end)
-    print(bannerblue + "                 .xWMMMMMMMMMMMMMMM0," + bannerblue2 + end)
-    print(bannerblue + "                   .,OMd,,,;0MMMO,." + end)
-    print(
-        bannerblue + "             .l0O." + W + "NEXP" + bannerblue2 + "OX."
-        + W + "NEXP" + bannerblue2 + "0MO" + W + "NEXP" + bannerblue + ".0Kd," + end
-    )
-    print(bannerblue + "             '0c      - " + Y + APP_NAME + bannerblue + " -      ,Ol" + end)
-    print(bannerblue + "               ;.                     :." + end)
+    total = exploit_module_total()
+    print(msf_red + "       =[ %s v%s — %s ]=" % (APP_NAME, APP_VERSION, EDITION) + end)
+    print(msf_dim + "+ -- --=[ %s ]=--" % APP_TAGLINE + end)
+    print(msf_dim + "+ -- --=[ %d exploit modules loaded ]=--" % total + end)
     print("")
-    print(W + "  Repo    : " + G + REPO_URL + end)
+    print(bannerblue + "     .d8888b.                    d8b" + end)
+    print(bannerblue + "    d88P  Y88b                   Y8P" + end)
+    print(bannerblue + "    888    888" + bannerblue2 + " 888  888" + end)
+    print(bannerblue + "    888    888" + bannerblue2 + " 888  888" + end)
+    print(bannerblue + "    888    888" + bannerblue2 + " 888  888" + end)
+    print(bannerblue + "    888    888" + bannerblue2 + " Y88b 888" + end)
+    print(bannerblue + "    Y88b  d88P" + bannerblue2 + "  \"Y88888" + end)
+    print(bannerblue + "     \"Y8888P\"" + bannerblue2 + "      888" + end)
+    print(bannerblue + "              " + W + "DevXploit Framework" + end)
+    print("")
+    print(W + "  resource (repo) => " + G + REPO_URL + end)
     print(
-        W + "  Credits : " + G + MAINTAINER + W + " (" + MAINTAINER_ALIAS + ")"
-        + W + " | ZADO-OS Roger OS" + end
+        W + "  author          => "
+        + G + MAINTAINER + W + " / " + MAINTAINER_ALIAS + end
     )
     print("")

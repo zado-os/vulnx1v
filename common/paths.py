@@ -5,13 +5,26 @@ from __future__ import (absolute_import, division, print_function)
 
 import os
 
+from common.branding import (
+    SHELL_GIF,
+    SHELL_HTML,
+    SHELL_PHP,
+    SHELL_TXT,
+    SHELL_ZIP,
+)
+
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHELL_DIR = os.path.join(ROOT_DIR, "shell")
 
+# Legacy upstream names → DevXploit payloads
 _FALLBACKS = {
-    "VulnX.zip": "VulnX.php",
-    "VulnX.gif": "VulnX.php",
-    "Vulnx.gif": "VulnX.php",
+    "DevXploit.php": SHELL_PHP,
+    "DevXploit.html": SHELL_HTML,
+    "DevXploit.txt": SHELL_TXT,
+    "DevXploit.gif": SHELL_GIF,
+    "DevXploit.zip": SHELL_ZIP,
+    "DevXploit.gif": SHELL_GIF,
+    "DevXploit.zip": SHELL_PHP,
 }
 
 

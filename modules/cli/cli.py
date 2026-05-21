@@ -166,7 +166,7 @@ class CLI():
         while True:
 
             self.autocompleter(man_dork)
-            cmd_interpreter = input("{0}{1}nexploit{2}{3} ({4}Dorks{5})>> {6}" .format(bannerblue2, W_UL, end, W, B, W, end))
+            cmd_interpreter = input("{0}{1}devxploit{2}{3} ({4}Dorks{5})>> {6}" .format(bannerblue2, W_UL, end, W, B, W, end))
             history.append(cmd_interpreter)
             if back_regx.search(cmd_interpreter):
                 break
@@ -191,7 +191,7 @@ class CLI():
                 while True:
 
                     self.autocompleter(man_setdork)
-                    cmd_interpreter_wp = input("{0}{1}nexploit{2}{3} ({4}Dorks-{5}{6})>> {7}" .format (bannerblue2, W_UL, end, W, B, self.get_dork(cmd_interpreter), W, end))
+                    cmd_interpreter_wp = input("{0}{1}devxploit{2}{3} ({4}Dorks-{5}{6})>> {7}" .format (bannerblue2, W_UL, end, W, B, self.get_dork(cmd_interpreter), W, end))
                     history.append(cmd_interpreter_wp)
                     '''SET PAGE VARIABLE.'''
 
@@ -200,13 +200,13 @@ class CLI():
                         while True:
 
                             self.autocompleter(man_dorkpage)
-                            cmd_interpreter_wp_page = input("{0}{1}nexploit{2}{3} ({4}Dorks-{5}-{6}{7})>> {8}" .format (
+                            cmd_interpreter_wp_page = input("{0}{1}devxploit{2}{3} ({4}Dorks-{5}-{6}{7})>> {8}" .format (
                                 bannerblue2, W_UL, end, W, B, self.get_dork(cmd_interpreter), self.set_page(cmd_interpreter_wp), W, end))
                             history.append(cmd_interpreter_wp_page)
                             if output.search(cmd_interpreter_wp_page):
                                 while True:
                                     self.autocompleter(man_dorkoutput)
-                                    cmd_interpreter_wp_page_output = input("{0}{1}nexploit{2}{3} ({4}Dorks-{5}-{6}{7})>> {8}" .format (
+                                    cmd_interpreter_wp_page_output = input("{0}{1}devxploit{2}{3} ({4}Dorks-{5}-{6}{7})>> {8}" .format (
                                         bannerblue2, W_UL, end, W, B, self.get_dork(cmd_interpreter), self.set_page(cmd_interpreter_wp), W, end))
                                     history.append(cmd_interpreter_wp_page_output)
 
@@ -259,12 +259,12 @@ class CLI():
     def general(self,cmd):
         while True:
             self.autocompleter(man_gloabal)
-            cmd = input("%s%snexploit%s > " % (bannerblue2, W_UL, end))
+            cmd = input("%s%sdevxploit%s > " % (bannerblue2, W_UL, end))
             history.append(cmd)
             if url_regx.search(cmd):
                 # url session
                 while True:
-                    cmd_interpreter = input("%s%snexploit%s%s target(%s%s%s) > %s" % (
+                    cmd_interpreter = input("%s%sdevxploit%s%s target(%s%s%s) > %s" % (
                         bannerblue2, W_UL, end, W, R, self.get_url(cmd), W, end))
                     history.append(cmd_interpreter)
                     if cmd_interpreter == 'back':

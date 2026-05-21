@@ -1,3 +1,9 @@
+#### v3.1-devxploit (DevXploit — ZADO-OS Roger OS)
+- Rebrand: **DevXploit** (`devxploit` / `devxploit.py`) — MSF-inspired console, `HIT`/`MISS` markers
+- Shell payloads: `DevXploit.php` + `?DevXploit=1` (legacy `VulnX.*` mapped in `paths.py`)
+- **119 modules:** Intel pack (14), WordPress extras (+10), Joomla multipart header fix
+- Repo: https://github.com/zado-os/devxploit
+
 #### v3.0-nexploit-only (Nexploit — drop vulnx)
 - Removed `vulnx.py` — single entry: `nexploit.py` + `./nexploit`
 - Install/update/Docker/CLI rebranded to Nexploit only

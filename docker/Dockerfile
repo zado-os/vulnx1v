@@ -1,24 +1,24 @@
 FROM python:3-alpine
 MAINTAINER ZADO-OS Roger OS
 
-LABEL name nexploit
-LABEL src "https://github.com/zado-os/nexploit"
+LABEL name DevXploit
+LABEL src "https://github.com/zado-os/devxploit"
 LABEL creator zado-os
-LABEL desc "Nexploit — CMS detection, Exploits Scan, dorks, DNS, auto shell injector"
+LABEL desc "DevXploit — CMS detection, Exploits Scan, dorks, DNS, shell injector"
 
 RUN apk add --no-cache git && \
-    git clone https://github.com/zado-os/nexploit.git /opt/nexploit
+    git clone https://github.com/zado-os/devxploit.git /opt/devxploit
 
-RUN addgroup -S nexploit && adduser -S -G nexploit nexploit
-RUN chown -R nexploit:nexploit /opt/nexploit
+RUN addgroup -S devxploit && adduser -S -G devxploit devxploit
+RUN chown -R devxploit:devxploit /opt/devxploit
 
-USER nexploit
-WORKDIR /opt/nexploit
+USER devxploit
+WORKDIR /opt/devxploit
 
 RUN pip install --user --upgrade pip && \
     pip install --user -r ./requirements.txt
 
-VOLUME [ "/nexploit" ]
+VOLUME [ "/devxploit" ]
 
-ENTRYPOINT [ "python3", "nexploit.py" ]
+ENTRYPOINT [ "python3", "devxploit.py" ]
 CMD [ "--help" ]

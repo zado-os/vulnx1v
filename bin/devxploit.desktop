@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=DevXploit
+Comment=CMS exploit framework — ZADO-OS Roger OS
+Exec=devxploit --it
+Icon=devxploiticon
+Terminal=true
+Categories=Utility;Security;

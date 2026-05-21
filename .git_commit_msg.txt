@@ -1,0 +1,6 @@
+DevXploit v3.1: rebrand, 119 modules, MSF-style UI, Joomla fixes
+
+- Rename CLI to devxploit; remove nexploit entry points
+- DevXploit shell payloads; Intel pack + WordPress extras
+- Fix Joomla shared Content-Type corruption; thumbnail path
+- English README with full mermaid architecture
