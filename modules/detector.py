@@ -196,6 +196,10 @@ class CMS(object):
                 print (' {0} WAF/CDN : {1}' .format(info, ", ".join(waf)))
             if cms['exploit']:
                 self._run_exploit_scan(cms['name'], instance)
+                from modules.advanced.orchestrator import run_advanced_pipeline
+                run_advanced_pipeline(
+                    self.url, self.headers, cms_name=display_cms,
+                )
             if cms['webinfo']:
                 print ("{0} −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−".format(W))
                 print(' {0} Web Hosting Information'.format(run))
@@ -224,5 +228,12 @@ class CMS(object):
             path = opts.report_path
             get_report().write_json(path)
             if path.endswith(".json"):
-                get_report().write_html(path.replace(".json", ".html"))
-            print(' {0} Report saved: {1}'.format(good, path))
+                html_p = path.replace(".json", ".html")
+                get_report().write_html(html_p)
+                print(' {0} Report saved: {1} + {2}'.format(good, path, html_p))
+                if opts.pdf_report or opts.full_advanced:
+                    pdf_p = path.replace(".json", ".pdf")
+                    if get_report().write_pdf(pdf_p):
+                        print(' {0} PDF report: {1}'.format(good, pdf_p))
+            else:
+                print(' {0} Report saved: {1}'.format(good, path))

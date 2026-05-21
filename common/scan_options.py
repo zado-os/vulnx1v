@@ -15,8 +15,24 @@ class ScanOptions(object):
     threads = 1
     proxy = None
     report_path = None        # JSON report file
+    # Advanced pipeline (v4.2+)
+    full_advanced = False
+    cve_match = False
+    wpscan = False
+    nuclei = False
+    sqli_xss = False
+    rate_limit = False
+    double_verify = False
+    msf_search = False
+    pdf_report = False
 
     _instance = None
+
+    def advanced_enabled(self):
+        return self.full_advanced or any([
+            self.cve_match, self.wpscan, self.nuclei,
+            self.sqli_xss, self.msf_search,
+        ])
 
     @classmethod
     def configure(cls, **kwargs):

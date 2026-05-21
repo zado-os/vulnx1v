@@ -1,24 +1,15 @@
-FROM python:3-alpine
-MAINTAINER ZADO-OS Roger OS
+FROM python:3.11-slim
+LABEL maintainer="Hussain Al-zadjali <zado-os>"
+LABEL org.opencontainers.image.source="https://github.com/zado-os/devxploit"
+LABEL org.opencontainers.image.title="DevXploit"
+LABEL org.opencontainers.image.version="4.2.0"
 
-LABEL name DevXploit
-LABEL src "https://github.com/zado-os/devxploit"
-LABEL creator zado-os
-LABEL desc "DevXploit — CMS detection, Exploits Scan, dorks, DNS, shell injector"
-
-RUN apk add --no-cache git && \
-    git clone https://github.com/zado-os/devxploit.git /opt/devxploit
-
-RUN addgroup -S devxploit && adduser -S -G devxploit devxploit
-RUN chown -R devxploit:devxploit /opt/devxploit
-
-USER devxploit
 WORKDIR /opt/devxploit
+COPY . /opt/devxploit/
 
-RUN pip install --user --upgrade pip && \
-    pip install --user -r ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    chmod +x devxploit
 
-VOLUME [ "/devxploit" ]
-
-ENTRYPOINT [ "python3", "devxploit.py" ]
-CMD [ "--help" ]
+VOLUME ["/devxploit/logs"]
+ENTRYPOINT ["python3", "devxploit.py"]
+CMD ["--help"]

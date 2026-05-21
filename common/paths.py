@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Resolve project paths (shell payloads) from any working directory."""
+"""Resolve project paths (shell payloads, data) from any working directory."""
 
 from __future__ import (absolute_import, division, print_function)
 
@@ -16,16 +16,19 @@ from common.branding import (
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SHELL_DIR = os.path.join(ROOT_DIR, "shell")
 
-# Legacy upstream names → DevXploit payloads
 _FALLBACKS = {
     "DevXploit.php": SHELL_PHP,
     "DevXploit.html": SHELL_HTML,
     "DevXploit.txt": SHELL_TXT,
     "DevXploit.gif": SHELL_GIF,
     "DevXploit.zip": SHELL_ZIP,
-    "DevXploit.gif": SHELL_GIF,
-    "DevXploit.zip": SHELL_PHP,
+    "VulnX.php": SHELL_PHP,
+    "VulnX.html": SHELL_HTML,
 }
+
+
+def project_root():
+    return ROOT_DIR
 
 
 def shell_path(filename):

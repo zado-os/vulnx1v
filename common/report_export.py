@@ -18,6 +18,7 @@ class ScanReport(object):
         self.cms_confidence = None
         self.waf = []
         self.findings = []
+        self.cve_findings = []
         self.packs = []
 
     def set_meta(self, cms=None, confidence=None, waf=None):
@@ -36,6 +37,18 @@ class ScanReport(object):
             "module": module,
             "type": hit_type or "shell",
             "url": url,
+        })
+
+    def add_cve_finding(self, entry):
+        self.cve_findings.append(entry)
+        self.findings.append({
+            "pack": "cve-match",
+            "module": entry.get("cve", "?"),
+            "type": "cve",
+            "url": entry.get("readme_url", ""),
+            "cvss": entry.get("cvss"),
+            "plugin": entry.get("plugin"),
+            "version": entry.get("installed_version"),
         })
 
     def add_pack_stats(self, pack, stats):
@@ -58,6 +71,7 @@ class ScanReport(object):
             "cms_confidence": self.cms_confidence,
             "waf": self.waf,
             "findings": self.findings,
+            "cve_findings": self.cve_findings,
             "packs": self.packs,
             "summary": {
                 "total_findings": len(self.findings),
@@ -103,6 +117,48 @@ th{background:#311;color:#f55}</style></head><body>
         os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
         with open(path, "w", encoding="utf-8") as fh:
             fh.write(html)
+
+    def write_pdf(self, path):
+        try:
+            from fpdf import FPDF
+        except ImportError:
+            return False
+        d = self.to_dict()
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        pdf.set_font("Helvetica", "B", 14)
+        pdf.cell(0, 10, "%s v%s Report" % (APP_NAME, APP_VERSION), ln=True)
+        pdf.set_font("Helvetica", size=10)
+        pdf.cell(0, 8, "Target: %s" % d.get("target", ""), ln=True)
+        pdf.cell(0, 8, "CMS: %s (%s%%)" % (
+            d.get("cms") or "?",
+            d.get("cms_confidence") or "?",
+        ), ln=True)
+        pdf.ln(4)
+        for f in d.get("findings", [])[:80]:
+            line = "[%s] %s / %s" % (
+                f.get("type", "?"),
+                f.get("module", "?"),
+                (f.get("url") or "")[:90],
+            )
+            pdf.multi_cell(0, 6, line)
+        if d.get("cve_findings"):
+            pdf.ln(4)
+            pdf.set_font("Helvetica", "B", 11)
+            pdf.cell(0, 8, "CVE matches:", ln=True)
+            pdf.set_font("Helvetica", size=9)
+            for c in d["cve_findings"]:
+                pdf.multi_cell(
+                    0, 5,
+                    "%s %s v%s CVSS %.1f" % (
+                        c.get("cve"), c.get("plugin"),
+                        c.get("installed_version"), c.get("cvss", 0),
+                    ),
+                )
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        pdf.output(path)
+        return True
 
 
 _report = None

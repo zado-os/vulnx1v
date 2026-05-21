@@ -1,5 +1,5 @@
-v4.0.1: fix false HIT, modern banner, scan progress
+v4.2.0: all advanced features, README, contributors policy
 
-- Strict plugin readme checks; INFO not SHELL for Elementor/plugins
-- Infer hit_type; hosting 404 filter; default 12s HTTP timeout
-- New boxed banner; live progress bar with --hits-only
+- CVE/SQLi-XSS/WPScan/Nuclei/MSF/PDF/TUI/--full pipeline
+- CONTRIBUTORS.md: zado-os only; disable Cursor co-author
+- Docker compose, data/cve_db.json, updated README

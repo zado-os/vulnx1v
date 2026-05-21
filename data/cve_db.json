@@ -1,0 +1,35 @@
+{
+  "elementor": [
+    {"cve": "CVE-2024-8236", "cvss": 8.8, "title": "Elementor RCE", "max_version": "3.24.6"}
+  ],
+  "contact-form-7": [
+    {"cve": "CVE-2020-35489", "cvss": 6.1, "title": "CF7 upload bypass", "max_version": "5.3.1"}
+  ],
+  "woocommerce": [
+    {"cve": "CVE-2023-28121", "cvss": 9.8, "title": "WooCommerce unauthorized admin", "max_version": "7.4.0"}
+  ],
+  "wordfence": [
+    {"cve": "CVE-2024-3054", "cvss": 7.5, "title": "Wordfence LFI", "max_version": "7.11.5"}
+  ],
+  "wp-file-manager": [
+    {"cve": "CVE-2020-25213", "cvss": 10.0, "title": "WP File Manager RCE", "max_version": "6.8"}
+  ],
+  "duplicator": [
+    {"cve": "CVE-2023-6114", "cvss": 7.5, "title": "Duplicator backup exposure", "max_version": "1.5.7"}
+  ],
+  "social-warfare": [
+    {"cve": "CVE-2019-9978", "cvss": 9.8, "title": "Social Warfare RCE", "max_version": "3.5.2"}
+  ],
+  "royal-elementor-addons": [
+    {"cve": "CVE-2023-5360", "cvss": 9.8, "title": "Royal Elementor file upload", "max_version": "1.3.78"}
+  ],
+  "essential-addons-for-elementor-lite": [
+    {"cve": "CVE-2024-5057", "cvss": 8.8, "title": "Essential Addons LFI", "max_version": "5.9.10"}
+  ],
+  "litespeed-cache": [
+    {"cve": "CVE-2024-28000", "cvss": 9.8, "title": "LiteSpeed privilege escalation", "max_version": "6.4"}
+  ],
+  "wpdatatables": [
+    {"cve": "CVE-2021-29447", "cvss": 7.5, "title": "wpDataTables SQLi", "max_version": "3.7"}
+  ]
+}

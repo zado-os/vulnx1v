@@ -90,6 +90,26 @@ def parse_args():
     parser.add_argument('--report', dest='report',
                         help='JSON report path (default: output/report.json if -o set)')
     parser.add_argument('--it', dest='cli', action='store_true')
+    parser.add_argument('--tui', dest='tui', action='store_true',
+                        help='Interactive TUI dashboard')
+    parser.add_argument('--full', dest='full', action='store_true',
+                        help='Enable all advanced features (CVE, Nuclei, WPScan, SQLi/XSS, MSF, PDF)')
+    parser.add_argument('--cve-match', dest='cve_match', action='store_true',
+                        help='Match plugin versions vs local CVE DB')
+    parser.add_argument('--wpscan', dest='wpscan', action='store_true',
+                        help='WPScan API (needs WPSCAN_API_TOKEN)')
+    parser.add_argument('--nuclei', dest='nuclei', action='store_true',
+                        help='Run Nuclei templates if installed')
+    parser.add_argument('--sqli-xss', dest='sqli_xss', action='store_true',
+                        help='SQLi/XSS reflection probes')
+    parser.add_argument('--rate-limit', dest='rate_limit', action='store_true',
+                        help='Random delay + UA rotation (WAF friendly)')
+    parser.add_argument('--double-verify', dest='double_verify', action='store_true',
+                        help='Require two shell confirmations for HIT')
+    parser.add_argument('--msf-search', dest='msf_search', action='store_true',
+                        help='searchsploit lookup for detected CMS')
+    parser.add_argument('--pdf-report', dest='pdf_report', action='store_true',
+                        help='Also write PDF next to JSON report')
     parser.add_argument('--cms', dest='cms', action='store_true')
     parser.add_argument('-w', '--web-info', dest='webinfo', action='store_true')
     parser.add_argument('-d', '--domain-info', dest='subdomains', action='store_true')
@@ -125,6 +145,8 @@ def main():
         import os
         report_path = os.path.join(args.output, 'devxploit_report.json')
 
+    exploit_on = args.exploit or args.exploit_scan
+    full = args.full
     ScanOptions.configure(
         pack_mode=pack_mode,
         hits_only=args.hits_only,
@@ -132,6 +154,15 @@ def main():
         threads=args.threads or 1,
         proxy=args.proxy,
         report_path=report_path,
+        full_advanced=full,
+        cve_match=full or args.cve_match or exploit_on,
+        wpscan=full or args.wpscan,
+        nuclei=full or args.nuclei,
+        sqli_xss=full or args.sqli_xss or exploit_on,
+        rate_limit=full or args.rate_limit or exploit_on,
+        double_verify=full or args.double_verify or exploit_on,
+        msf_search=full or args.msf_search,
+        pdf_report=full or args.pdf_report,
     )
 
     HEADERS = build_headers(args.proxy)
@@ -153,6 +184,11 @@ def main():
 
     if args.dorkslist:
         DorkManual(select=args.dorkslist).list()
+        return
+
+    if args.tui:
+        from modules.tui.dashboard import run_dashboard
+        run_dashboard(HEADERS)
         return
 
     if args.cli:

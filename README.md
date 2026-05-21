@@ -1,14 +1,14 @@
 <p align="center">
   <a href="https://github.com/zado-os/devxploit"><img src="https://i.ibb.co/ZxxFqxQ/vxv2.png" alt="DevXploit"></a>
   <br>
-  <strong>DevXploit</strong> — ZADO-OS Roger OS Edition
+  <strong>DevXploit v4.2.0</strong> — ZADO-OS Roger OS Edition
   <br>
-  <sub>CMS exploit framework · intel probes · shell injection · dorks · DNS</sub>
+  <sub>588 modules · CVE match · Nuclei · WPScan · SQLi/XSS · PDF reports</sub>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/App-DevXploit-9cf?style=flat-square" alt="DevXploit">
+  <img src="https://img.shields.io/badge/version-4.2.0-red?style=flat-square" alt="version">
   <img src="https://img.shields.io/badge/Modules-588+-red?style=flat-square" alt="modules">
   <img src="https://img.shields.io/badge/License-GPL--3.0-green?style=flat-square" alt="license">
   <a href="https://github.com/zado-os/devxploit">
@@ -20,284 +20,178 @@
   <a href="https://github.com/zado-os/devxploit/archive/refs/heads/main.zip">Download ZIP</a> •
   <a href="https://github.com/zado-os/devxploit">Repository</a> •
   <a href="https://github.com/zado-os/devxploit/issues">Issues</a> •
-  <a href="https://github.com/anouarbensaad/vulnx/wiki/Usage">Upstream VulnX Wiki</a>
+  <a href="CONTRIBUTORS.md">Contributors</a>
 </p>
+
+---
+
+## Maintainer
+
+| | |
+|--|--|
+| **Author** | Hussain Al-zadjali — **[@zado-os](https://github.com/zado-os)** |
+| **Project** | ZADO-OS Roger OS Edition |
+| **Upstream** | [anouarbensaad/vulnx](https://github.com/anouarbensaad/vulnx) |
+
+> **Contributors on GitHub:** Only **@zado-os** is the project author. If **@cursoragent** appears, it is from the Cursor IDE co-author setting — see [CONTRIBUTORS.md](CONTRIBUTORS.md) to disable it. This repo’s git history uses only `zado-os <hussainzado@gmail.com>`.
 
 ---
 
 ## Overview
 
-**DevXploit** is an automated CMS assessment framework maintained by **ZADO-OS (Roger OS)**. It fingerprints the target stack, runs chained exploit modules with `[n/total]` progress, validates upload/shell paths, and exports results. The console layout is inspired by professional exploit frameworks (structured `[*]` / `[+]` / `[-]` lines) while remaining a distinct, lightweight Python tool—not a Metasploit clone.
-
-Fork lineage: [anouarbensaad/vulnx](https://github.com/anouarbensaad/vulnx) → ZADO-OS hardening, **DevXploit** branding, expanded module packs, and fixed multipart uploads.
-
-**Repository:** [github.com/zado-os/devxploit](https://github.com/zado-os/devxploit)
+**DevXploit** fingerprints CMS targets, runs **588** exploit modules (legacy + 2026 packs + frameworks), validates shells with strict rules, and optionally runs an **advanced pipeline**: CVE version matching, SQLi/XSS probes, WPScan API, Nuclei, searchsploit, JSON/HTML/PDF reports.
 
 ```bash
 git clone https://github.com/zado-os/devxploit.git
 cd devxploit
-python3 -m pip install -r requirements.txt
-chmod +x devxploit
-./devxploit -u https://example.com --exploit-scan -o ./logs
-```
-
-> **Kali / Debian:** Always use `python3` and `pip3` (or `python3 -m pip`). The default `pip` command may point to Python 2.7.
-
----
-
-## Architecture
-
-```mermaid
-flowchart TB
-    subgraph CLI["Entry layer"]
-        DX[devxploit / devxploit.py]
-        ARG[argparse flags]
-        BAN[common/banner.py]
-    end
-
-    subgraph Core["Orchestration"]
-        DET[modules/detector.py CMS]
-        EXS[modules/exploits/exploit_scanner.py]
-    end
-
-    subgraph Packs["Exploit packs"]
-        INTEL[intel_exploits.py — 14 probes]
-        WP[wordpress_exploits.py + wordpress_extra — 33]
-        JOO[joomla_exploits.py — 19]
-        PS[prestashop_exploits.py — 28]
-        DR[drupal_exploits.py — 8]
-        OC[opencart_exploits.py — 6]
-        LM[lokomedia_exploits.py — 6]
-        MG[magento_exploits.py — 5]
-    end
-
-    subgraph Exec["Executors"]
-        E1[executor/Wordpress.py]
-        E2[executor/Joomla.py]
-        E3[executor/Prestashop.py]
-        E4[executor/Drupal.py]
-        E5[executor/Opencart.py]
-        E6[executor/Magento.py]
-        E7[executor/Lokomedia.py]
-    end
-
-    subgraph Support["Shared services"]
-        BR[common/branding.py]
-        PT[common/paths.py + shell/]
-        HTTP[common/http_session.py]
-        EH[common/exploit_http.py]
-        COL[common/colors.py]
-    end
-
-    subgraph Extra["Optional features"]
-        DORK[modules/dorks/]
-        DNS[modules/dns_dump.py]
-        PORT[modules/scan_ports.py]
-        GATH[modules/gathering/]
-    end
-
-    DX --> ARG --> DET
-    DX --> BAN
-    DET --> EXS
-    EXS --> INTEL & WP & JOO & PS & DR & OC & LM & MG
-    DET --> E1 & E2 & E3 & E4 & E5 & E6 & E7
-    E1 --> WP
-    E2 --> JOO
-    EXS --> PT & HTTP & EH & COL & BR
-    DET --> DORK & DNS & PORT & GATH
-```
-
-### Scan flow (`-x` / `--exploit-scan`)
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant D as devxploit.py
-    participant C as CMS detector
-    participant S as exploit_scanner
-    participant M as Exploit module
-
-    U->>D: devxploit -u URL -x
-    D->>C: instanciate()
-    C->>C: Fingerprint CMS
-    alt Known CMS
-        C->>S: run pack for detected CMS
-    else Unknown CMS
-        S->>S: Intel pack (14)
-        S->>S: Probe all CMS chains
-    end
-    loop Each module n/total
-        S->>M: run method()
-        M-->>S: status + shell URL
-        S-->>U: [?] [n/t] name HIT|MISS
-    end
-    S-->>U: Summary + optional log file
+python3 -m pip install -r requirements.txt --break-system-packages
+chmod +x devxploit install.sh
+./devxploit -u https://target.example -x --full --report ./logs/report.json
 ```
 
 ---
 
-## Features
+## Features (v4.2)
 
-| Area | Capability |
-|------|------------|
-| CMS detection | 11 platforms + confidence % + WAF/CDN fingerprint |
-| Exploits Scan | **588** modules (legacy + 50×7 CMS 2026 + 30×4 frameworks) |
-| Intel pack | `.git`, `.env`, phpinfo, backups, XML-RPC, PHPUnit, Adminer, etc. |
-| Shell verify | Strict `HIT` — `php_uname` in body; rejects 404 false positives |
-| Reports | JSON + HTML via `--report` or `-o report.json` |
-| Filters | `--hits-only`, `--min-severity shell`, `--legacy-only`, `--2026-only` |
-| Batch | `-i urls.txt --threads 5` parallel scanning |
-| Proxy | `--proxy http://127.0.0.1:8080` |
-| Interactive | `search CVE`, `scan URL -x`, `modules` |
+| Feature | Flag / default | Description |
+|---------|----------------|-------------|
+| Exploit scan | `-x` | 588 modules, `[n/t]` progress |
+| **Full power** | `--full` | CVE + SQLi/XSS + WPScan + Nuclei + MSF + PDF + rate-limit + double-verify |
+| CVE auto-match | `-x` or `--cve-match` | Plugin `readme.txt` version vs `data/cve_db.json` + CVSS |
+| Double shell verify | `-x` or `--double-verify` | Two GET checks before **HIT** |
+| Rate-limit / WAF | `-x` or `--rate-limit` | Delay + User-Agent rotation |
+| SQLi / XSS | `-x` or `--sqli-xss` | Reflection probes on common params |
+| WPScan API | `--wpscan` / `--full` | Needs `export WPSCAN_API_TOKEN=...` |
+| Nuclei | `--nuclei` / `--full` | External `nuclei` binary |
+| searchsploit | `--msf-search` / `--full` | Exploit-DB lookup for CMS |
+| Reports | `--report file.json` | JSON + HTML; PDF with `--pdf-report` or `--full` |
+| Batch | `-i urls.txt --threads 5` | Parallel targets |
+| TUI | `--tui` | `scan`, `cve`, `modules` commands |
+| Filters | `--hits-only`, `--2026-only`, `--legacy-only` | Noise control |
 
-### Module counts by pack
+### Result types
 
-| Pack | Legacy | **2026** | **Total** | Example |
-|------|--------|----------|-----------|---------|
-| Intel | 14 | — | 14 | `devxploit --exploit-cms intel` |
-| WordPress | 32 | 50 | **82** | `devxploit -u URL --exploit-cms wordpress` |
-| Joomla | 19 | 50 | **69** | `--exploit-cms joomla` |
-| PrestaShop | 28 | 50 | **78** | `--exploit-cms prestashop` |
-| Drupal | 8 | 50 | **58** | `--exploit-cms drupal` |
-| OpenCart | 6 | 50 | **56** | `--exploit-cms opencart` |
-| Lokomedia | 6 | 50 | **56** | `--exploit-cms lokomedia` |
-| Magento | 5 | 50 | **55** | `--exploit-cms magento` |
-| Laravel | — | 30 | **30** | `--exploit-cms laravel` |
-| Shopify | — | 30 | **30** | `--exploit-cms shopify` |
-| Moodle | — | 30 | **30** | `--exploit-cms moodle` |
-| Shopware | — | 30 | **30** | `--exploit-cms shopware` |
-
-2026 probes: `modules/exploits/probes_2026/`. **HIT** = confirmed shell; **INFO** = component/path found.
-
-List modules: `devxploit --list-exploits all`
+| Tag | Meaning |
+|-----|---------|
+| **HIT** | Confirmed shell (`php_uname` / upload form, double-checked if enabled) |
+| **EXPOSE** | Backup, `.env`, installer leak |
+| **INFO** | Plugin/path/CVE indicator — verify manually |
+| **CVE** | Version matched against local CVE DB (CVSS in report) |
+| **MISS** | Not vulnerable |
 
 ---
 
 ## Quick start (Kali Linux)
 
 ```bash
-cd ~/Desktop/tools/devxploit   # or your clone path
+sudo apt update
+sudo apt install python3 python3-pip git exploitdb -y   # exploitdb → searchsploit
+git clone https://github.com/zado-os/devxploit.git
+cd devxploit
 git pull
 python3 -m pip install -r requirements.txt --break-system-packages
-chmod +x devxploit install.sh
-./devxploit -u https://target.example -x --hits-only --report ./logs/report.json
-```
-
-System-wide install:
-
-```bash
 sudo ./install.sh
-devxploit -u https://target.example -x
-```
 
-| Problem | Solution |
-|---------|----------|
-| `devxploit: command not found` | Run `./devxploit` from the project dir or `sudo ./install.sh` |
-| `pip` uses Python 2.7 | Use `python3 -m pip install -r requirements.txt` |
-| Joomla `form-data` errors | Fixed in v3.1 — update repo; headers are no longer corrupted between modules |
+# Recommended full scan
+devxploit -u https://target.com -x --full --report /root/scan.json -o /root/logs
+
+# Shell hits only (no false plugin HIT)
+devxploit -u https://target.com -x --hits-only --double-verify
+
+# Optional WPScan (free token at wpscan.com)
+export WPSCAN_API_TOKEN="your_token"
+devxploit -u https://target.com -x --full
+
+# Optional Nuclei
+go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest
+devxploit -u https://target.com --nuclei
+```
 
 ---
 
 ## CLI reference
 
 ```
-usage: devxploit [options]
+devxploit -u URL -x [options]
 
-  -u, --url URL           Target URL
-  -x, --exploit-scan      Run Exploits Scan (recommended)
-  -e, --exploit           Alias for exploit scan
-  --exploit-cms PACK      intel|wordpress|joomla|prestashop|drupal|opencart|
-                          magento|laravel|shopify|moodle|shopware|all
-  --list-exploits PACK    Print module catalog
-  --legacy-only           Classic modules only
-  --2026-only             2026 CVE pack only
-  --hits-only             Hide MISS / low-noise INFO
-  --min-severity LEVEL    info | expose | shell
-  --threads N             Batch parallelism (-i)
-  --proxy URL             HTTP proxy
-  --report FILE.json      Export JSON report (+ .html)
-  -o, --output DIR        Logs directory or report.json path
-  --cms                   CMS metadata (themes, plugins, users)
-  -w, --web-info          Web recon
-  -d, --domain-info       Subdomain enum
-  --dns                   DNS information
-  -p, --ports N           Port scan
-  -D, --dorks QUERY       Search engine dorks
-  -l, --dork-list CMS     List built-in dork names
-  --it                    Interactive console
-  -i, --input FILE        Batch URLs from file
+Core
+  -u, --url URL              Target
+  -x, --exploit-scan         Exploit scan (enables CVE, SQLi/XSS, rate-limit, double-verify)
+  --full                     All advanced tools (WPScan, Nuclei, MSF, PDF, …)
+  --exploit-cms PACK         intel|wordpress|joomla|…|all
+  --list-exploits PACK       Module catalog
+  --hits-only                Hide MISS / INFO
+  --min-severity LEVEL       info | expose | shell
+  --legacy-only / --2026-only
+  -i FILE --threads N        Batch scan
+  --proxy URL
+  --report FILE.json         JSON + HTML (+ PDF if --full / --pdf-report)
+  -o DIR                     Log directory
+
+Advanced (v4.2)
+  --cve-match                Local CVE DB version match
+  --wpscan                   WPScan API (WPSCAN_API_TOKEN)
+  --nuclei                   Nuclei templates
+  --sqli-xss                 SQLi/XSS reflection probes
+  --rate-limit               WAF-friendly pacing
+  --double-verify            Two-step shell confirmation
+  --msf-search               searchsploit for CMS
+  --pdf-report               PDF next to JSON report
+  --tui                      Interactive dashboard
+  --it                       Legacy interactive CLI
 ```
 
-Examples:
+### Examples
 
 ```bash
+devxploit -u https://site.tld -x --full --report scan.json
 devxploit -u https://site.tld -x --hits-only
-devxploit -u https://site.tld -x --report scan.json
 devxploit -u https://site.tld --exploit-cms wordpress --2026-only
-devxploit -i targets.txt --threads 5 -x -o ./batch_logs
+devxploit -i targets.txt --threads 5 -x --full -o ./batch
+devxploit --tui
 devxploit --list-exploits all
-devxploit --it    # then: scan https://target -x | search CVE-2024
 ```
 
 ---
 
-## Publish on GitHub & use on Kali
+## Module counts
 
-```bash
-# GitHub (maintainer)
-git clone https://github.com/zado-os/DevXploit.git
-cd DevXploit
-git pull
-
-# Kali users
-sudo apt install python3 python3-pip git -y
-git clone https://github.com/zado-os/DevXploit.git
-cd DevXploit
-python3 -m pip install -r requirements.txt --break-system-packages
-chmod +x devxploit install.sh
-sudo ./install.sh
-devxploit -u https://target.com -x --report /root/report.json
-```
-
-Share repo link: **https://github.com/zado-os/DevXploit**
+| Pack | Legacy | 2026 | Total |
+|------|--------|------|-------|
+| Intel | 14 | — | 14 |
+| WordPress | 32 | 50 | 82 |
+| Joomla | 19 | 50 | 69 |
+| PrestaShop | 28 | 50 | 78 |
+| Drupal | 8 | 50 | 58 |
+| OpenCart | 6 | 50 | 56 |
+| Lokomedia | 6 | 50 | 56 |
+| Magento | 5 | 50 | 55 |
+| Laravel / Shopify / Moodle / Shopware | — | 30 each | 30 |
+| **Total** | | | **588** |
 
 ---
 
 ## Project layout
 
 ```
-devxploit.py              Main entry (only)
-devxploit                 Bash launcher → python3 devxploit.py
+devxploit.py                 Entry point
 common/
-  branding.py             App name, repo, shell filenames
-  banner.py               Console banner (MSF-style layout)
-  colors.py               [*] [+] [-] palette
-  paths.py                Resolve shell/ from any cwd
-  http_session.py         Safe multipart uploads
-  exploit_http.py         Shell probe helpers
+  exploit_http.py            Shell / plugin verification
+  cve_match.py               CVE + CVSS from data/cve_db.json
+  wpscan_client.py           WPScan API
+  nuclei_runner.py           Nuclei integration
+  msf_search.py              searchsploit
+  report_export.py           JSON / HTML / PDF
+  rate_limit.py              WAF pacing
+  double_verify.py           Two-step HIT
 modules/
-  detector.py             CMS routing
-  exploits/
-    exploit_scanner.py    Chains, progress, summaries
-    intel_exploits.py     Cross-CMS intel
-    wordpress_exploits.py Core WP chain
-    wordpress_extra.py    Additional WP/CVE probes
-    joomla_exploits.py    Joomla components
-    prestashop_exploits.py
-    drupal_exploits.py
-    opencart_exploits.py
-    magento_exploits.py
-    lokomedia_exploits.py
-  executor/               Per-CMS runners
-  dorks/                  Search operators
-  gathering/              CMS-specific intel
-  cli/                    Interactive mode
-shell/
-  DevXploit.php           Upload payload
-  DevXploit.html / .txt / .gif
-install.sh / update.sh
-docker/Dockerfile
-bin/devxploit.desktop
+  exploits/                  588 module chains
+  advanced/orchestrator.py   Post-scan pipeline
+  tui/dashboard.py           --tui mode
+  detector.py                CMS routing
+data/cve_db.json             Local CVE ↔ plugin versions
+docker-compose.yml           Official container
+CONTRIBUTORS.md              Sole maintainer: zado-os
 ```
 
 ---
@@ -305,34 +199,36 @@ bin/devxploit.desktop
 ## Docker
 
 ```bash
-git clone https://github.com/zado-os/devxploit.git
-cd devxploit
-docker build -t devxploit ./docker/
-docker run -it --rm devxploit -u http://example.com -x
-docker run -it -v "$PWD:/devxploit" devxploit -u http://example.com -x -o /devxploit/logs
+docker compose build
+docker compose run --rm devxploit -u https://example.com -x --full --report /devxploit/logs/report.json
+```
+
+Or:
+
+```bash
+docker build -t devxploit:4.2 -f docker/Dockerfile .
+docker run -it --rm -v "$PWD/logs:/devxploit/logs" devxploit:4.2 -u http://target -x
 ```
 
 ---
 
-## Windows & Termux
+## GitHub & updates
 
-**Windows:** Install Python 3, then `python devxploit.py -u URL -x` from the project folder.
+```bash
+git pull
+sudo ./update.sh
+```
 
-**Termux:** `pkg install python git` → clone repo → `pip install -r requirements.txt` → `python devxploit.py -u URL -x` or run `install.sh` as root in Termux.
-
----
-
-## Legal & ethics
-
-Use only on systems you own or are explicitly authorized to test. Unauthorized access is illegal. Maintainers provide this software for defensive research and sanctioned penetration tests.
+Repository: **https://github.com/zado-os/devxploit**
 
 ---
 
-## Credits & license
+## Legal
 
-| Role | Name |
-|------|------|
-| Maintainer | **ZADO-OS** (Roger OS) |
-| Upstream | [Anouar Ben Saad — VulnX](https://github.com/anouarbensaad/vulnx) |
+Use only on systems you are authorized to test. Unauthorized access is illegal.
 
-Licensed under [GPL-3.0](LICENSE).
+---
+
+## License
+
+[GPL-3.0](LICENSE) — maintained by **Hussain Al-zadjali (@zado-os)**.

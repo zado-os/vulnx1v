@@ -1,3 +1,8 @@
+#### v4.2.0 — Advanced pipeline (all requested features)
+- `--full`: CVE match, SQLi/XSS, WPScan, Nuclei, searchsploit, PDF, rate-limit, double-verify
+- `data/cve_db.json` + CVSS in reports; `CONTRIBUTORS.md` (zado-os only, no Cursor co-author)
+- TUI `--tui`, docker-compose, fpdf2 reports, modern maintainer docs
+
 #### v4.0.1 — Accuracy & banner
 - Fix false HIT on plugin paths (Elementor, WP extras) — strict readme + INFO tag
 - Reject hosting soft-404; infer hit_type from URL; live progress with `--hits-only`

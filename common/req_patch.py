@@ -20,6 +20,8 @@ def apply_request_timeout(timeout=DEFAULT_TIMEOUT):
 
         def _wrap(original, default_timeout=timeout):
             def _caller(url, *args, **kwargs):
+                from common.rate_limit import maybe_delay
+                maybe_delay()
                 kwargs.setdefault("timeout", default_timeout)
                 kwargs.setdefault("verify", False)
                 return original(url, *args, **kwargs)
