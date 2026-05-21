@@ -110,6 +110,10 @@ def parse_args():
                         help='searchsploit lookup for detected CMS')
     parser.add_argument('--pdf-report', dest='pdf_report', action='store_true',
                         help='Also write PDF next to JSON report')
+    parser.add_argument('--detect-only', dest='detect_only', action='store_true',
+                        help='Detection only (INFO paths) — no real RCE/upload attempts')
+    parser.add_argument('--real-exploit', dest='real_exploit', action='store_true',
+                        help='Force real exploitation (default with -x)')
     parser.add_argument('--cms', dest='cms', action='store_true')
     parser.add_argument('-w', '--web-info', dest='webinfo', action='store_true')
     parser.add_argument('-d', '--domain-info', dest='subdomains', action='store_true')
@@ -163,6 +167,7 @@ def main():
         double_verify=full or args.double_verify or exploit_on,
         msf_search=full or args.msf_search,
         pdf_report=full or args.pdf_report,
+        real_exploit=(exploit_on or args.real_exploit) and not args.detect_only,
     )
 
     HEADERS = build_headers(args.proxy)

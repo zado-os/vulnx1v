@@ -25,6 +25,7 @@ class ScanOptions(object):
     double_verify = False
     msf_search = False
     pdf_report = False
+    real_exploit = True       # True = RCE/upload attempts; False = detect-only INFO
 
     _instance = None
 

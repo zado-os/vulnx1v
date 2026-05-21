@@ -1,3 +1,8 @@
+#### v4.3.0 — Real Exploit Mode (default with -x)
+- 2026 pack: tries real CVE handlers (Royal Elementor, CF7, File Manager, HT Mega, …) — MISS if no RCE
+- Banner shows `[REAL EXPLOIT]`; use `--detect-only` for old INFO-only behavior
+- Handlers: CVE-2023-5360, CVE-2020-35489, CVE-2020-25213, CVE-2024-5084, CVE-2023-6552
+
 #### v4.2.3 — Contact Form 7 CVE-2020-35489 exploit chain
 - Real CF7 upload attempt: version check, form discovery, filename bypass, shell verify
 
